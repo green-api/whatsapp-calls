@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 
 import { CallInfo, CallState } from '@green-api/whatsapp-api-calls-client-js';
-import { Layout, notification } from 'antd';
+import { Layout } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import Header from 'components/header';
 import IncomingCall from 'components/incoming-call';
+import { notifyError } from 'components/notify-error';
 import { useAppSelector } from 'hooks/redux';
 import { useActions } from 'hooks/useActions';
 import { useCallsConnection } from 'hooks/useCallsConnection';
@@ -72,11 +73,7 @@ const BaseLayout: FC = () => {
       setHasActiveCall(true);
       navigate(`/call/${idInstance}`);
     } catch (err) {
-      notification.error({
-        message: 'Something went wrong',
-        description: (err as Error).message,
-        duration: 10,
-      });
+      notifyError(err);
     }
   };
 
@@ -86,11 +83,7 @@ const BaseLayout: FC = () => {
     try {
       await getClient().reject();
     } catch (err) {
-      notification.error({
-        message: 'Something went wrong',
-        description: (err as Error).message,
-        duration: 10,
-      });
+      notifyError(err);
     }
   };
 

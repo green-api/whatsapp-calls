@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
 import { Backspace, Phone } from '@mui/icons-material';
-import { Button, Select, notification } from 'antd';
+import { Button, Select } from 'antd';
 import { AsYouType, CountryCode } from 'libphonenumber-js';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import {
   pickAddress,
   toDialTarget,
 } from 'common';
+import { notifyError } from 'components/notify-error';
 import { useAppSelector } from 'hooks/redux';
 import { useActions } from 'hooks/useActions';
 import { useGetWaSettingsQuery } from 'services/endpoints';
@@ -165,11 +166,7 @@ const Softphone: FC = () => {
       setHasActiveCall(true);
       navigate(`/call/${credentials.idInstance}`);
     } catch (err) {
-      notification.error({
-        message: 'Something went wrong',
-        description: (err as Error).message,
-        duration: 10,
-      });
+      notifyError(err);
     } finally {
       setDialling(false);
     }

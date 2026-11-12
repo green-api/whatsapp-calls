@@ -7,6 +7,7 @@ import { Navigate } from 'react-router-dom';
 
 import { formatAddress } from 'common';
 import CountUpTimer from 'components/count-up-timer';
+import { notifyError } from 'components/notify-error';
 import PeerAvatar from 'components/peer-avatar';
 import StreamVisualizer from 'components/stream-visualizer';
 import { useAppSelector } from 'hooks/redux';
@@ -134,11 +135,7 @@ const Call: FC = () => {
       await getClient().hangUp();
       setHasActiveCall(false);
     } catch (err) {
-      notification.error({
-        message: 'Something went wrong',
-        description: (err as Error).message,
-        duration: 10,
-      });
+      notifyError(err);
     }
   };
 

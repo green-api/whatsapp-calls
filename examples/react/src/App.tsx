@@ -1,10 +1,11 @@
 import { FC, useEffect } from 'react';
 
-import { ConfigProvider, notification } from 'antd';
+import { ConfigProvider } from 'antd';
 import { RouterProvider } from 'react-router-dom';
 
 import 'App.css';
 import { THEME } from 'common';
+import { notifyError } from 'components/notify-error';
 import { useAppSelector } from 'hooks/redux';
 import { useActions } from 'hooks/useActions';
 import { useCallsConnection } from 'hooks/useCallsConnection';
@@ -33,11 +34,7 @@ const App: FC = () => {
     try {
       openVoip({ idInstance, apiTokenInstance, apiUrl });
     } catch (err) {
-      notification.error({
-        message: 'Something went wrong',
-        description: (err as Error).message,
-        duration: 10,
-      });
+      notifyError(err);
     }
   }, [auth, idInstance, apiTokenInstance, apiUrl]);
 
