@@ -5,6 +5,7 @@ import { Button, List } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { Contact, GetContactsResponse, LID, formatAddress, pickAddress } from 'common';
+import { notifyError } from 'components/notify-error';
 import PeerAvatar from 'components/peer-avatar';
 import SearchForm from 'components/search-form';
 import { useAppSelector } from 'hooks/redux';
@@ -63,8 +64,8 @@ const ContactsList: FC = () => {
 
       setHasActiveCall(true);
       navigate(`/call/${credentials.idInstance}`);
-    } catch {
-      // The dialler shows the failure; a second toast from the list would only repeat it.
+    } catch (err) {
+      notifyError(err);
       // Leaving the peer in the field is what makes a retry one click rather than a search.
       setActivePeer({ id: contact.id, lid: contact.lid });
     }

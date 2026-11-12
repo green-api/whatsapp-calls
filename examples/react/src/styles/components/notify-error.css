@@ -1,0 +1,132 @@
+/* The error toast. antd's static notification renders outside the app's tree, so it is
+   styled by class with literal values; antd's own chrome is stripped and the card is ours. */
+.ant-notification .notify-error.ant-notification-notice {
+  width: 400px;
+  max-width: calc(100vw - 40px);
+  padding: 0 !important;
+  background: #f3ffcf;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0 rgba(34, 70, 36, 0.6);
+  letter-spacing: 0.01em;
+}
+
+.notify-error .ant-notification-notice-message {
+  display: none;
+}
+
+.notify-error .ant-notification-notice-description {
+  margin: 0;
+}
+
+.notify-error__content {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  column-gap: 15px;
+  align-items: center;
+  padding: 20px 50px 20px 20px;
+  color: #4b4b4b;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.notify-error__icon {
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 50%;
+  color: #3b9702;
+}
+
+.notify-error__icon .MuiSvgIcon-root {
+  width: 22px;
+  height: 22px;
+}
+
+.notify-error__text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.notify-error__title {
+  color: #4b4b4b;
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 700;
+}
+
+.notify-error__action {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 15px;
+  padding: 8px 20px;
+  background: #3b9702;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.notify-error__action:hover,
+.notify-error__action:focus-visible {
+  background: #2d7301;
+  color: #ffffff;
+}
+
+.notify-error .ant-notification-notice-close {
+  top: 8px;
+  inset-inline-end: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  color: #4b4b4b;
+  transition: background-color 0.3s;
+}
+
+.notify-error .ant-notification-notice-close:hover {
+  background: #f5f5f5;
+}
+
+.notify-error__close.MuiSvgIcon-root {
+  width: 18px;
+  height: 18px;
+}
+
+/* The card enters with antd's own animation; only the icon settles in a beat later, as in
+   the design. */
+.notify-error__icon {
+  animation: notify-error-pop 0.4s 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+@keyframes notify-error-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notify-error__icon {
+    animation: none !important;
+  }
+}
