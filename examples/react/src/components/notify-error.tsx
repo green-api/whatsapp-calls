@@ -22,11 +22,15 @@ const failureStatus = (message: string) => {
   return match ? Number(match[1]) : null;
 };
 
+/** Whether the failure is the quota refusal, the one the card and the call button react to. */
+export const isQuotaError = (err: unknown) =>
+  failureStatus(err instanceof Error ? err.message : String(err)) === 466;
+
 /** The quota refusal gets its own card; every other failure keeps antd's standard toast. */
 export const notifyError = (err: unknown) => {
   const message = err instanceof Error ? err.message : String(err);
 
-  if (failureStatus(message) !== 466) {
+  if (!isQuotaError(err)) {
     notification.error({ message: 'Something went wrong', description: message, duration: 10 });
 
     return;

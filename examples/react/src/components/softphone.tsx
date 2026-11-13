@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Backspace, Phone } from '@mui/icons-material';
 import { Button, Select } from 'antd';
@@ -15,7 +15,7 @@ import {
   pickAddress,
   toDialTarget,
 } from 'common';
-import { notifyError } from 'components/notify-error';
+import { isQuotaError, notifyError } from 'components/notify-error';
 import { useAppSelector } from 'hooks/redux';
 import { useActions } from 'hooks/useActions';
 import { useGetWaSettingsQuery } from 'services/endpoints';
@@ -62,6 +62,11 @@ const Softphone: FC = () => {
 
   const [digits, setDigits] = useState('');
   const [dialling, setDialling] = useState(false);
+  // The call button shakes and goes red for a moment when the quota refuses the call.
+  const [denied, setDenied] = useState(false);
+  const deniedTimer = useRef<number>();
+
+  useEffect(() => () => window.clearTimeout(deniedTimer.current), []);
 
   // The instance's own number is the best guess at who the user calls: start there rather
   // than at some arbitrary default. The store applies it only while nothing has been chosen,
@@ -167,6 +172,16 @@ const Softphone: FC = () => {
       navigate(`/call/${credentials.idInstance}`);
     } catch (err) {
       notifyError(err);
+
+      if (isQuotaError(err)) {
+        window.clearTimeout(deniedTimer.current);
+        setDenied(false);
+        // A frame apart, so a second refusal restarts the animation instead of being ignored.
+        requestAnimationFrame(() => {
+          setDenied(true);
+          deniedTimer.current = window.setTimeout(() => setDenied(false), 1600);
+        });
+      }
     } finally {
       setDialling(false);
     }
@@ -241,14 +256,33 @@ const Softphone: FC = () => {
       </div>
 
       <Button
-        className="softphone__call"
+        className={`softphone__call ${denied ? 'softphone__call--denied' : ''}`}
         type="primary"
         shape="circle"
         onClick={onCall}
         loading={dialling}
         disabled={!digits}
         aria-label="Call"
-        icon={<Phone sx={{ fontSize: 26 }} />}
+        icon={
+          <>
+            <Phone sx={{ fontSize: 26 }} />
+            {denied && (
+              <svg
+                className="softphone__call-slash"
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <line x1="4" y1="20" x2="20" y2="4" />
+              </svg>
+            )}
+          </>
+        }
       />
     </div>
   );
