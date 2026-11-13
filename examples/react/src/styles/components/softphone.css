@@ -78,7 +78,9 @@
   border-radius: var(--radius-sm);
   display: inline-flex;
   flex: none;
-  transition: background-color 0.16s ease, color 0.16s ease;
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease;
 }
 
 .softphone__erase:hover:not(:disabled) {
@@ -108,7 +110,9 @@
   align-items: center;
   justify-content: center;
   gap: 1px;
-  transition: background-color 0.12s ease, transform 0.06s ease;
+  transition:
+    background-color 0.12s ease,
+    transform 0.06s ease;
 }
 
 .softphone__key:hover {
@@ -143,6 +147,72 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* A refused call (quota): the button goes red, shakes, and a ring pulses out of it, with a
+   slash across the handset. */
+.softphone__call--denied.ant-btn {
+  position: relative;
+  background-color: #df484a !important;
+  animation: softphone-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+.softphone__call--denied.ant-btn::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid #df484a;
+  animation: softphone-ring 0.7s ease-out forwards;
+}
+
+.softphone__call-slash {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  pointer-events: none;
+}
+
+@keyframes softphone-shake {
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(4px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-7px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(7px);
+  }
+}
+
+@keyframes softphone-ring {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .softphone__call--denied.ant-btn,
+  .softphone__call--denied.ant-btn::after {
+    animation: none;
+  }
 }
 
 /* A LID has no flag to show, so the chip carries the word instead — and stays the same
